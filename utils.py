@@ -46,22 +46,25 @@ def load_drugs_from_file(file_path=_drug_file):
 
 
 def save_drugs_to_mysql(drug_infos):
-    connection = pymysql.connect(
-        host=mysql_config['host'],
-        user=mysql_config['user'],
-        password=mysql_config['password'],
-        db=mysql_config['database'],
-        charset='utf8mb4'
-    )
-    try:
-        with connection.cursor() as cursor:
-            for drug_info in tqdm(drug_infos):
-                sql = _build_insert_sql(drug_info)
-                print(sql)
-                cursor.execute(sql)
-        connection.commit()
-    finally:
-        connection.close()
+    with open('add_drugs.sql', 'w+') as f:
+        for drug_info in drug_infos:
+            f.write(_build_insert_sql(drug_info))
+            f.write('\n')
+    # connection = pymysql.connect(
+    #     host=mysql_config['host'],
+    #     user=mysql_config['user'],
+    #     password=mysql_config['password'],
+    #     db=mysql_config['database'],
+    #     charset='utf8mb4'
+    # )
+    # try:
+    #     with connection.cursor() as cursor:
+    #         for drug_info in tqdm(drug_infos):
+    #             sql = _build_insert_sql(drug_info)
+    #             cursor.execute(sql)
+    #     connection.commit()
+    # finally:
+    #     connection.close()
 
 
 if __name__ == '__main__':
